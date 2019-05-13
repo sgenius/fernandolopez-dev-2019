@@ -27,10 +27,11 @@ export default {
     [
       require.resolve('react-static-plugin-source-filesystem'),
       {
-        location: path.resolve('./src/pages'),
+        location: './src/pages',
       },
     ],
     require.resolve('react-static-plugin-reach-router'),
     require.resolve('react-static-plugin-sitemap'),
+    require.resolve('react-static-plugin-styled-components'),
   ],
 }
