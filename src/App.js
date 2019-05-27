@@ -1,33 +1,35 @@
-import React from 'react'
-import { Root, Routes, addPrefetchExcludes } from 'react-static'
-//
-import { Link, Router } from 'components/Router'
-import Dynamic from 'containers/Dynamic'
+import React from 'react';
+import styled from 'styled-components';
+import { Root, Routes, addPrefetchExcludes } from 'react-static';
+import { Container, Row, Col } from 'react-awesome-styled-grid';
 
-import './app.css'
+import { Router } from 'components/Router';
+import MainNav from 'components/MainNav';
+import Dynamic from 'containers/Dynamic';
+
+import './app.css';
 
 // Any routes that start with 'dynamic' will be treated as non-static routes
-addPrefetchExcludes(['dynamic'])
+addPrefetchExcludes(['dynamic']);
 
 function App() {
-  return (
-    <Root>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/about">About</Link>
-        <Link to="/blog">Blog</Link>
-        <Link to="/dynamic">Dynamic</Link>
-      </nav>
-      <div className="content">
-        <React.Suspense fallback={<em>Loading...</em>}>
-          <Router>
-            <Dynamic path="dynamic" />
-            <Routes path="*" />
-          </Router>
-        </React.Suspense>
-      </div>
-    </Root>
-  )
+    return (
+        <Root>
+            <MainNav />
+            <Container>
+                <Row>
+                    <Col xs={4} sm={6} lg={8} offset={{ sm: 1, lg: 2 }}>
+                        <React.Suspense fallback={<em>Loading...</em>}>
+                            <Router>
+                                <Dynamic path="dynamic" />
+                                <Routes path="*" />
+                            </Router>
+                        </React.Suspense>
+                    </Col>
+                </Row>
+            </Container>
+        </Root>
+    );
 }
 
-export default App
+export default App;
