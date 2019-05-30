@@ -33,5 +33,6 @@
     "eslint-plugin-react": "7.x",
     "react-awesome-styled-grid": "^2.2.5",
     "serve": "10.1.2"
-  }
+  },
+  "version": "0.0.0"
 }
