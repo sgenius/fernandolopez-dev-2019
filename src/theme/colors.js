@@ -14,6 +14,8 @@ export const COLORS = {
     hoveredLink: '#91A7A9',
     activeLink: '#859D9F',
     visitedLink: '#596C6E',
+
+    es: '#4C4E51',
 };
 
 export default COLORS;

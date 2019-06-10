@@ -1,8 +1,29 @@
 import React from 'react';
 import styled from 'styled-components';
+import COLORS from 'theme/colors';
 
-const StyledH1 = styled.h1`
+import Background from 'components/Background';
+import RandomTaco from 'components/RandomTaco';
+
+const StyledPreTitleWrap = styled.div`
+    padding-top: 1rem;
+`;
+
+const StyledPreTitle = styled.div`
     font-family: 'Merriweather', serif;
+    font-weight: normal;
+    font-size: 1.6rem;
+    display: inline-block;
+`;
+
+const StyledPreTitleEs = styled(StyledPreTitle)`
+    font-style: italic;
+    font-color: ${COLORS.es};
+`;
+
+const StyledTitle = styled.h1`
+    font-family: 'Merriweather', serif;
+    display: block;
     font-weight: normal;
     font-size: 2.4rem;
 `;
@@ -10,13 +31,24 @@ const StyledH1 = styled.h1`
 const StyledSubtitle = styled.p`
     font-family: 'Merriweather', serif;
     font-weight: normal;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
+`;
+
+const StyledSubtitleEs = styled(StyledSubtitle)`
+    font-style: italic;
+    font-color: ${COLORS.es};
 `;
 
 export default () => (
     <>
-        <StyledH1>Hi. I'm Fernando L&oacute;pez. </StyledH1>
+        <StyledPreTitleWrap>
+            <StyledPreTitle>Hi. I'm •&nbsp;</StyledPreTitle>
+            <StyledPreTitleEs>Hola. Soy</StyledPreTitleEs>
+        </StyledPreTitleWrap>
+        <StyledTitle>Fernando L&oacute;pez. </StyledTitle>
         <StyledSubtitle>I am a frontend dev who cares about community and doing things well. Currently at Lyft, helping to make the world a better place.</StyledSubtitle>
-        <p>A bridge. I want an illustration. Probably old-timey and simple.</p>
+        <StyledSubtitleEs>Soy un desarrollador frontend al que le importa la comunidad y hacer las cosas bien. Trabajo para Lyft, ayudando a hacer un mundo mejor.</StyledSubtitleEs>
+        <RandomTaco />
+        <Background />
     </>
 );

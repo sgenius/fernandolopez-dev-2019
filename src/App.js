@@ -3,12 +3,12 @@ import React from 'react';
 import { Root, Routes, addPrefetchExcludes } from 'react-static';
 import { Container, Row, Col } from 'react-awesome-styled-grid';
 
-// import MainNav from 'components/MainNav';
-import BottomBar from 'components/BottomBar';
-import DefaultOneCol from 'components/DefaultOneCol';
-import { Router } from 'components/Router';
 import TopBar from 'components/TopBar';
+
+import { Router } from 'components/Router';
 import Dynamic from 'containers/Dynamic';
+import DefaultOneCol from 'components/DefaultOneCol';
+import BottomBar from 'components/BottomBar';
 
 import './app.css';
 
@@ -19,7 +19,6 @@ function App() {
     return (
         <Root>
             <TopBar />
-            {/* <MainNav /> */}
             <DefaultOneCol>
                 <React.Suspense fallback={<em>Loading...</em>}>
                     <Router>
