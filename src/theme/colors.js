@@ -1,7 +1,6 @@
 /* Coolors Exported Palette - coolors.co/88ccf1-c1dff0-3587a4-002642-840032 */
 const BASE_COLORS = {
     color1: 'rgba(136, 204, 241, 1)',
-    color1shade1: 'rgba(124, 186, 220, 1)',
     color2: 'rgba(193, 223, 240, 1)',
     color3: 'rgba(53, 135, 164, 1)',
     color4: 'rgba(0, 38, 66, 1)',
@@ -22,10 +21,10 @@ export const COLORS = {
     highlight3: BASE_COLORS.color3,
     highlight4: BASE_COLORS.color4,
 
-    link: BASE_COLORS.color1,
-    hoveredLink: BASE_COLORS.color1shade1,
-    activeLink: BASE_COLORS.color1shade1,
-    visitedLink: BASE_COLORS.color1shade1,
+    link: BASE_COLORS.color3,
+    hoveredLink: BASE_COLORS.color3,
+    activeLink: BASE_COLORS.color3,
+    visitedLink: BASE_COLORS.color3,
 
     es: BASE_COLORS.sp,
 };
