@@ -12,7 +12,7 @@ const StyledContainer = styled(Container)`
 `;
 
 export const DefaultOneCol = (props) => (
-    <Wrapper>
+    <Wrapper className={props.className || ''}>
         <StyledContainer>
             <Row>
                 <Col xs={4} sm={6} lg={8} offset={{ sm: 1, lg: 2 }}>
