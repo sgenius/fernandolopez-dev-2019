@@ -11,6 +11,8 @@ const BottomBarSection = styled.section`
     padding-top: 1rem;
     margin-top: 1rem;
 
+    border-top: 1px solid ${COLORS.highlight1};
+
     font-size: 0.8rem;
 `;
 
