@@ -12,7 +12,7 @@ const TopBarSection = styled.section`
     letter-spacing: 0.2rem;
 
     background-color: ${COLORS.highlight1};
-    color: ${COLORS.background};
+    color: ${COLORS.highlight4};
 `;
 
 export const TopBar = () => (
