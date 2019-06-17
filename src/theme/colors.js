@@ -1,21 +1,33 @@
-//https://coolors.co/4c4e51-49475b-596c6e-acc196-e9eb9e
+/* Coolors Exported Palette - coolors.co/88ccf1-c1dff0-3587a4-002642-840032 */
+const BASE_COLORS = {
+    color1: 'rgba(136, 204, 241, 1)',
+    color1shade1: 'rgba(124, 186, 220, 1)',
+    color2: 'rgba(193, 223, 240, 1)',
+    color3: 'rgba(53, 135, 164, 1)',
+    color4: 'rgba(0, 38, 66, 1)',
+    color5: 'rgba(132, 0, 50, 1)',
+    bg: '#E2E2E2',
+    text: '#04080F',
+    offText: '#4C4E51',
+    sp: '#6B5E62',
+};
 
 export const COLORS = {
-    background: '#E2E2E2',
-    textColor: '#04080F',
-    grayTextColor: '#4C4E51',
-    
-    highlight1: '#49475B',
-    highlight2: '#799496',
-    highlight3: '#ACC196',
-    highlight4: '#E9EB9E',
+    background: BASE_COLORS.bg,
+    textColor: BASE_COLORS.text,
+    grayTextColor: BASE_COLORS.offText,
 
-    link: '#799496',
-    hoveredLink: '#91A7A9',
-    activeLink: '#859D9F',
-    visitedLink: '#596C6E',
+    highlight1: BASE_COLORS.color1,
+    highlight2: BASE_COLORS.color2,
+    highlight3: BASE_COLORS.color3,
+    highlight4: BASE_COLORS.color4,
 
-    es: '#4C4E51',
+    link: BASE_COLORS.color1,
+    hoveredLink: BASE_COLORS.color1shade1,
+    activeLink: BASE_COLORS.color1shade1,
+    visitedLink: BASE_COLORS.color1shade1,
+
+    es: BASE_COLORS.sp,
 };
 
 export default COLORS;

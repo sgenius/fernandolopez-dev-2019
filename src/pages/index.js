@@ -16,17 +16,6 @@ const StyledPreTitle = styled.div`
     display: inline-block;
 `;
 
-const StyledPreTitleEs = styled(StyledPreTitle)`
-    font-style: italic;
-    font-color: ${COLORS.es};
-`;
-
-const StyledTitle = styled.h1`
-    font-family: 'Merriweather', serif;
-    display: block;
-    font-weight: normal;
-    font-size: 2.4rem;
-`;
 
 const StyledSubtitle = styled.p`
     font-family: 'Merriweather', serif;
@@ -36,18 +25,17 @@ const StyledSubtitle = styled.p`
 
 const StyledSubtitleEs = styled(StyledSubtitle)`
     font-style: italic;
-    font-color: ${COLORS.es};
 `;
 
 export default () => (
     <>
         <StyledPreTitleWrap>
             <StyledPreTitle>Hi. I'm •&nbsp;</StyledPreTitle>
-            <StyledPreTitleEs>Hola. Soy</StyledPreTitleEs>
+            <StyledPreTitle className="es">Hola. Soy</StyledPreTitle>
         </StyledPreTitleWrap>
-        <StyledTitle>Fernando L&oacute;pez. </StyledTitle>
-        <StyledSubtitle>I am a frontend dev who cares about community and doing things well. Currently at Lyft, helping to make the world a better place.</StyledSubtitle>
-        <StyledSubtitleEs>Soy un desarrollador frontend al que le importa la comunidad y hacer las cosas bien. Trabajo para Lyft, ayudando a hacer un mundo mejor.</StyledSubtitleEs>
+        <h1>Fernando L&oacute;pez. </h1>
+        <p className="subtitle">I am a frontend dev who cares about community and doing things well. Currently at Lyft, helping to make the world a better place.</p>
+        <p className="subtitle es">Soy un desarrollador frontend al que le importa la comunidad y hacer las cosas bien. Trabajo para Lyft, ayudando a hacer un mundo mejor.</p>
         <RandomTaco />
         <Background />
     </>
