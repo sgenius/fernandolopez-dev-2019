@@ -1,0 +1,92 @@
+import React from 'react';
+import styled from 'styled-components';
+import { useRouteData } from 'react-static'
+import Link from 'components/Link';
+import DefaultOneCol from 'components/DefaultOneCol';
+import CountryLink from 'components/Countries/CountryLink';
+
+const StyledHeaderCol = styled(DefaultOneCol)`
+    background: #fff;
+    color: #111;
+    border-bottom: 5px solid #2d394f;
+`;
+
+const StyledH1 = styled.h1`
+    font-family: 'Abril Fatface', serif;
+    font-size: 2rem;
+    margin: 3rem 0 0.25rem;
+`;
+
+const StyledH1Span = styled.span`
+    display: block;
+    font-size: 6rem;
+    line-height: 0.75;
+`;
+
+const StyledCol = styled(DefaultOneCol)`
+    background: #f3f5f6 url(/images/paper_fibers.png);
+    color: #111;
+`;
+
+const StyledUl = styled.ul`
+    list-style: none;
+    margin-left: 0;
+    padding: 0;
+`;
+
+const StyledLi = styled.li`
+    display: block;
+    margin: 0.5rem 0;
+`;
+
+export const Countries = () => {
+    const { restCountries } = useRouteData();
+    console.log('route data: ', useRouteData());
+
+    const countryList = restCountries.map((country => (
+        <StyledLi key={`li-country-${country.alpha3Code}`}>
+            <CountryLink
+                name={country.name}
+                alpha2Code={country.alpha2Code}
+                alpha3Code={country.alpha3Code}
+                display={'block'}
+            />
+        </StyledLi>
+    )), []);
+
+    return (
+        <main>
+            <StyledHeaderCol>
+                <StyledH1>A Guide To The World's <StyledH1Span>Countries.</StyledH1Span></StyledH1>
+            </StyledHeaderCol>
+            <StyledCol>
+                <p>Before I loved web development, I loved geography. As a child, I used to buy 
+                    these yearly World Almanacs. This intends to be pretty much like that: a reference
+                    for the world's countries, with basic data to jumpstart a research session.</p>
+                <p>This was created as an experiment to test the power of static websites - in this case, <Link as="a" href="https://github.com/nozzle/react-static">React Static</Link>. Data from 
+                    two APIs, <Link as="a" href="https://www.geonames.org">Geonames</Link> and <Link as="a" href="https://restcountries.eu">REST Countries</Link>, 
+                    was consumed at compilation time to generate static pages which are fast to load, yet extremely versatile. 
+                </p>
+                <StyledUl>
+                    {countryList}
+                </StyledUl>
+                <section>
+                    Sources (thanks to all of you!):
+                    <ul>
+                        <li><Link as="a" href="https://www.geonames.org">Geonames</Link></li>
+                        <li><Link as="a" href="https://restcountries.eu">REST Countries</Link></li>
+                        <li>Flag icons in this page from <Link as="a" href="https://www.countryflags.io">countryflags.io</Link>.</li>
+                        <li>Maps in the country pages: <Link as="a" href="https://developer.mapquest.com/documentation/open/static-map-api/v5/map/">Mapquest API</Link></li>
+                        <li>National anthems: <Link as="a" href="http://www.nationalanthems.info">nationalanthems.info</Link>;
+                            licensed under a <Link as="a" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License.</Link>
+                        </li>
+                    </ul>
+                    <p>For a similar project with a different take check out <Link as="a" href="http://countries.petethompson.net/">Countries of the World</Link>. Also, <Link as="a" href="https://github.com/mledoze/countries">mledoze's countries database</Link> is just awesome.</p>
+
+                </section>
+            </StyledCol>
+        </main>
+    );
+}
+
+export default Countries;

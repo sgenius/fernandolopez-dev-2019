@@ -1,0 +1,32 @@
+/*
+    Palette for countries:
+    light shades: #f3f5f6
+    light accent: #8298b4
+    main brand: #6685a1
+    dark accent: #8b7077
+    dark shades: #2d394f
+
+    http://colormind.io/bootstrap/
+*/
+html {
+    background-color: #f3f5f6;
+    color: #111;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #2d394f;
+}
+
+.accent-section {
+    background: #8b7077;
+    color: #f3f5f6;
+}
+
+.accent-section h1,
+.accent-section h2,
+.accent-section h3,
+.accent-section h4,
+.accent-section h5,
+.accent-section h6 {
+    color: #f3f5f6;
+}
