@@ -40,7 +40,7 @@
     "HTML_TEMPLATE": "C:\\Users\\fa_lo\\Projects\\fernandolopez-dev-2019\\dist\\index.html",
     "STATIC_DATA": "C:\\Users\\fa_lo\\Projects\\fernandolopez-dev-2019\\dist\\staticData"
   },
-  "siteRoot": "/",
+  "siteRoot": "",
   "basePath": "",
   "publicPath": "/",
   "assetsPath": "",

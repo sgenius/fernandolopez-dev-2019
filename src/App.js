@@ -1,5 +1,4 @@
 import React from 'react';
-// import styled from 'styled-components';
 import { Root, Routes, addPrefetchExcludes } from 'react-static';
 
 import TopBar from 'components/TopBar';
