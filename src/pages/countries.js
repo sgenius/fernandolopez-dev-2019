@@ -35,25 +35,88 @@ const StyledUl = styled.ul`
 `;
 
 const StyledLi = styled.li`
-    display: block;
-    margin: 0.5rem 0;
+    display: inline-block;
+    margin: 0.5rem 1rem 0.5rem 0;
 `;
 
-export const Countries = () => {
-    const { restCountries } = useRouteData();
-    console.log('route data: ', useRouteData());
+const RegionName = styled.h2`
+    padding-bottom: 0;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #2d394f;
 
-    const countryList = restCountries.map((country => (
-        <StyledLi key={`li-country-${country.alpha3Code}`}>
+    font-family: 'Abril Fatface', serif;
+    color: #2d394f;
+    font-size: 2rem;
+`;
+
+const sortCountriesByName = (countries) => {
+    return countries.sort((country1, country2) => {
+        const name1 = country1.name.common;
+        const name2 = country2.name.common;
+        if (name1 < name2) {
+            return -1;
+        } else if (name1 > name2) {
+            return 1;
+        }
+        return 0;
+    });
+};
+
+const groupCountriesByRegion = (countries) => {
+    const groupedCountries = {};
+    countries.forEach((country) => {
+        const { region } = country;
+        const regionGroup = groupedCountries[region] || [];
+        regionGroup.push(country);
+        groupedCountries[region] = regionGroup;
+    });
+
+    const groupedCountriesArr = Object.values(groupedCountries);
+    groupedCountriesArr.forEach(countryGroup => sortCountriesByName(countryGroup));
+
+    return groupedCountries;
+};
+
+const makeCountryList = (countryArray) => {
+    const countryList = countryArray.map((country => (
+        <StyledLi key={`li-country-${country.cca3}`}>
             <CountryLink
-                name={country.name}
-                alpha2Code={country.alpha2Code}
-                alpha3Code={country.alpha3Code}
-                display={'block'}
+                name={country.name.common}
+                alpha2Code={country.cca2}
+                alpha3Code={country.cca3}
+                display={'inline-block'}
             />
         </StyledLi>
     )), []);
 
+    return (
+        <StyledUl>
+            {countryList}
+        </StyledUl>
+    );
+}
+
+const makeRegionalCountryList = (countryArray, regionName) => (
+    <section key={`regionList-${regionName.replace(' ', '')}`}>
+        <RegionName>{regionName}</RegionName>
+        { makeCountryList(countryArray) }
+    </section>
+);
+
+const makeRegionalCountryLists = (countriesByRegion) => {
+    const countryLists = [];
+    for (let [regionName, countryArray] of Object.entries(countriesByRegion)) {
+        countryLists.push(makeRegionalCountryList(countryArray, regionName));
+    }
+    return countryLists;
+}
+
+export const Countries = () => {
+    const countries = useRouteData().restCountries;
+    const countriesByRegion = groupCountriesByRegion(countries);
+    console.log('route data: ', useRouteData());
+
+    const countryLists = makeRegionalCountryLists(countriesByRegion);
     return (
         <main>
             <StyledHeaderCol>
@@ -67,9 +130,7 @@ export const Countries = () => {
                     two APIs, <Link as="a" href="https://www.geonames.org">Geonames</Link> and <Link as="a" href="https://restcountries.eu">REST Countries</Link>, 
                     was consumed at compilation time to generate static pages which are fast to load, yet extremely versatile. 
                 </p>
-                <StyledUl>
-                    {countryList}
-                </StyledUl>
+                {countryLists}
                 <section>
                     Sources (thanks to all of you!):
                     <ul>

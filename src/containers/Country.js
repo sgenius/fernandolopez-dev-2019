@@ -43,7 +43,6 @@ const StyledSectionTitle = styled.h2`
     font-size: 1.4rem;
     font-weight: normal;
     padding: 1rem 0 0.5rem;
-    background: rgba(255, 255, 255, 0.5);
     border-bottom: 1px solid #6685a1;
 `;
 
@@ -66,7 +65,17 @@ const StyledUl = styled.ul`
 `;
 
 const StyledCountryLi = styled.li`
-    margin-bottom: 0.5rem;
+    margin: 0.25rem;
+    display: inline-block;
+`;
+
+const FlagGridContainer = styled.div`
+    display: block;
+    @media (min-width: 48rem) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-column-gap: 1rem;
+    }
 `;
 
 export default function Country() {
@@ -74,7 +83,12 @@ export default function Country() {
     console.log('route data: ', useRouteData());
 
     const MAPBOX_KEY = 'GauozURsWaWLTHQ5PC5c2qDG8M7RC4ET';
-    const boundingBox = `${gnData.north},${gnData.west},${gnData.south},${gnData.east}`;
+
+    const { north, west, south, east } = gnData;
+    // Russia has weird dimensions; handle that case
+    const boundingBox = east < west
+        ? `${north},${east},${south},${west}`
+        : `${north},${west},${south},${east}`;
     const mapWidth = 1000;
     const mapHeight = 400;
     const mapSize = `${mapWidth},${mapHeight}`;
@@ -104,26 +118,32 @@ export default function Country() {
                 </header>
             </StyledHeaderCol>
             <StyledMapSection>
-                <StyledMap alt={`Map of ${countryName}`} src={mapUrl}/>
+                <StyledMap alt={`Map of ${countryName}`} src={mapUrl} />
             </StyledMapSection>
             <StyledCol>
                 <section>
                     <StyledSectionTitle>Flag and anthem</StyledSectionTitle>
-                    <img alt={`Flag of ${countryName}`} src={flagUrl}/>
-                    <p>
-                        <Link as="a" href={moreFlagsUrl} target="_blank">More about the current flag(s) of {countryName} at crwflags.com</Link>
-                    </p>
-                    <p>
-                        <StyledDataTitle>National Anthem</StyledDataTitle><br />
-                        <audio controls src={anthemUrl}>
-                            Sorry, this media cannot be played here. Try clicking the link below instead:
-                        </audio>
-                    </p>
-                    <p>
-                        <StyledNote>
-                            <Link as="a" href={anthemInfoUrl} target="_blank">Info about the national anthem of {countryName} at nationalanthems.info</Link>
-                        </StyledNote>
-                    </p>
+                    <FlagGridContainer>
+                        <div>
+                            <img alt={`Flag of ${countryName}`} src={flagUrl} />
+                            <p>
+                                <Link as="a" href={moreFlagsUrl} target="_blank">More about the current flag(s) of {countryName} at crwflags.com</Link>
+                            </p>
+                        </div>
+                        <div>
+                            <p>
+                                <StyledDataTitle>National Anthem</StyledDataTitle><br />
+                                <audio controls src={anthemUrl}>
+                                    Sorry, this media cannot be played here. Try clicking the link below instead:
+                                </audio>
+                            </p>
+                            <p>
+                                <StyledNote>
+                                    <Link as="a" href={anthemInfoUrl} target="_blank">Info about the national anthem of {countryName} at nationalanthems.info</Link>
+                                </StyledNote>
+                            </p>
+                        </div>
+                    </FlagGridContainer>
                 </section>
                 <section>
                     <StyledSectionTitle>Geography</StyledSectionTitle>
@@ -134,7 +154,7 @@ export default function Country() {
                     <StyledUl>
                         {bordersLinkData.map(bc => (
                             <StyledCountryLi key={`bc-${bc.alpha3Code}`}>
-                                <CountryLink name={bc.name} alpha2Code={bc.alpha2Code} alpha3Code={bc.alpha3Code} display="inline-block"/>
+                                <CountryLink name={bc.name} alpha2Code={bc.alpha2Code} alpha3Code={bc.alpha3Code} display="inline-block" />
                             </StyledCountryLi>
                         ))}
                     </StyledUl>

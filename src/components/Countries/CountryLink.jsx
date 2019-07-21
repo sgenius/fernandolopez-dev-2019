@@ -4,11 +4,12 @@ import styled from 'styled-components';
 import Link from 'components/Link';
 
 const StyledCountryLink = styled(Link)`
-    display: ${props => props.display};
-    border: 1px solid #333;
-    border-radius: 0.25rem;
+    display: inline-block;
+    border: 3px solid #8B7077;
+    border-width: 0 0 3px;
     background: #f3f5f6;
-    padding: 0.5rem;
+    padding: 0.2rem;
+    color: #8B7077;
     &:hover {
         background: #fff;
     }
@@ -25,7 +26,7 @@ export const CountryLink = ({
     alpha3Code = '',
     display = 'block',
 }) => (
-    <StyledCountryLink to={`/countries/${alpha3Code}`} display={display}>
+    <StyledCountryLink to={`/countries/${alpha3Code}`}>
         {alpha2Code && (
             <img src={`https://www.countryflags.io/${alpha2Code.toLowerCase()}/shiny/16.png`} alt={`Flag of ${name}`} />
         )}
