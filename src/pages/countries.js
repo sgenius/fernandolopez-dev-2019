@@ -79,12 +79,10 @@ const groupCountriesByRegion = (countries) => {
 
 const makeCountryList = (countryArray) => {
     const countryList = countryArray.map((country => (
-        <StyledLi key={`li-country-${country.cca3}`}>
+        <StyledLi key={`li-country-${country.cca2}`}>
             <CountryLink
                 name={country.name.common}
-                alpha2Code={country.cca2}
-                alpha3Code={country.cca3}
-                display={'inline-block'}
+                cca2={country.cca2}
             />
         </StyledLi>
     )), []);
@@ -112,7 +110,7 @@ const makeRegionalCountryLists = (countriesByRegion) => {
 }
 
 export const Countries = () => {
-    const countries = useRouteData().restCountries;
+    const countries = useRouteData().countriesData;
     const countriesByRegion = groupCountriesByRegion(countries);
     console.log('route data: ', useRouteData());
 

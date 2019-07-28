@@ -64,6 +64,10 @@ const StyledUl = styled.ul`
     list-style: none;
 `;
 
+const StyledLi = styled.li`
+    margin: 0.25rem;
+`;
+
 const StyledCountryLi = styled.li`
     margin: 0.25rem;
     display: inline-block;
@@ -78,13 +82,18 @@ const FlagGridContainer = styled.div`
     }
 `;
 
+const CiaMapFloat = styled.div`
+    padding: 0 0 1rem 1rem;
+    float: right;
+    font-size: 0.8rem;
+`;
+
 export default function Country() {
-    const { gnData, restData, bordersLinkData } = useRouteData();
+    const { country, bordersLinkData } = useRouteData();
     console.log('route data: ', useRouteData());
 
     const MAPBOX_KEY = 'GauozURsWaWLTHQ5PC5c2qDG8M7RC4ET';
-
-    const { north, west, south, east } = gnData;
+    const { north, west, south, east } = country;
     // Russia has weird dimensions; handle that case
     const boundingBox = east < west
         ? `${north},${east},${south},${west}`
@@ -94,20 +103,11 @@ export default function Country() {
     const mapSize = `${mapWidth},${mapHeight}`;
     const mapUrl = `https://open.mapquestapi.com/staticmap/v5/map?key=${MAPBOX_KEY}&boundingBox=${boundingBox}&size=${mapSize}&type=map`;
 
-    const ccLowerCase = gnData.countryCode.toLowerCase();
-    const { countryName } = gnData;
-    const { nativeName } = restData;
-
-    const flagUrl = restData.flag;
-    const moreFlagsUrl = `https://crwflags.com/fotw/flags/${ccLowerCase}.html`;
-    const anthemUrl = `http://www.nationalanthems.info/${ccLowerCase}.mp3`;
-    const anthemInfoUrl = `http://www.nationalanthems.info/${ccLowerCase}.htm`;
-    const moreMapsUrl = `https://gadm.org/maps/${restData.alpha3Code}.html`;
-    const wikiName = gnData.countryName.split(" ").join("_");
-    const wikiUrl = `https://en.wikipedia.org/wiki/${wikiName}`;
-
-    console.log('gnData: ', gnData);
-    console.log('restData: ', restData);
+    const ccLowerCase = country.countryCode.toLowerCase();
+    const countryName = country.name.common;
+    const countryNameArr = countryName.toLowerCase().split(" ");
+    const countryNameKebab = countryNameArr.join("-");
+    const countryNameSnake = countryNameArr.join("_");
 
     return (
         <main>
@@ -125,21 +125,21 @@ export default function Country() {
                     <StyledSectionTitle>Flag and anthem</StyledSectionTitle>
                     <FlagGridContainer>
                         <div>
-                            <img alt={`Flag of ${countryName}`} src={flagUrl} />
+                            <img alt={`Flag of ${countryName}`} src={country.flagUrl} />
                             <p>
-                                <Link as="a" href={moreFlagsUrl} target="_blank">More about the current flag(s) of {countryName} at crwflags.com</Link>
+                                <Link as="a" href={`https://crwflags.com/fotw/flags/${ccLowerCase}.html`} target="_blank">More about the current flag(s) of {countryName} at crwflags.com</Link>
                             </p>
                         </div>
                         <div>
                             <p>
                                 <StyledDataTitle>National Anthem</StyledDataTitle><br />
-                                <audio controls src={anthemUrl}>
+                                <audio controls src={`http://www.nationalanthems.info/${ccLowerCase}.mp3`}>
                                     Sorry, this media cannot be played here. Try clicking the link below instead:
                                 </audio>
                             </p>
                             <p>
                                 <StyledNote>
-                                    <Link as="a" href={anthemInfoUrl} target="_blank">Info about the national anthem of {countryName} at nationalanthems.info</Link>
+                                    <Link as="a" href={`http://www.nationalanthems.info/${ccLowerCase}.htm`} target="_blank">Info about the national anthem of {countryName} at nationalanthems.info</Link>
                                 </StyledNote>
                             </p>
                         </div>
@@ -147,61 +147,88 @@ export default function Country() {
                 </section>
                 <section>
                     <StyledSectionTitle>Geography</StyledSectionTitle>
-                    <p><StyledDataTitle>Native name</StyledDataTitle> {nativeName}</p>
-                    <p><StyledDataTitle>Alternate spellings</StyledDataTitle> {restData.altSpellings.join(', ')}</p>
-                    <p><StyledDataTitle>Continent</StyledDataTitle> {gnData.continentName}, subregion: {restData.subregion}</p>
+                    <CiaMapFloat>
+                        <img src={`https://www.cia.gov/library/publications/the-world-factbook/attachments/maps/${country.fipsCode}-map.gif`} alt="Map by The World Factbook, CIA"/>
+                        <br />Map source: The CIA World Factbook
+                    </CiaMapFloat>
+                    <p><StyledDataTitle>Official name</StyledDataTitle> {country.name.official}</p>
+                    <p><StyledDataTitle>Alternate spellings</StyledDataTitle> {country.altSpellings.join(', ')}</p>
+                    <p><StyledDataTitle>Continent</StyledDataTitle> {country.continentName}, subregion: {country.subregion}</p>
                     <p><StyledDataTitle>Borders</StyledDataTitle></p>
                     <StyledUl>
                         {bordersLinkData.map(bc => (
-                            <StyledCountryLi key={`bc-${bc.alpha3Code}`}>
-                                <CountryLink name={bc.name} alpha2Code={bc.alpha2Code} alpha3Code={bc.alpha3Code} display="inline-block" />
+                            <StyledCountryLi key={`bc-${bc.alpha2Code}`}>
+                                <CountryLink name={bc.name} cca2={bc.alpha2Code} />
                             </StyledCountryLi>
                         ))}
                     </StyledUl>
-                    <p><StyledNote><Link as="a" href={moreMapsUrl}>Thematic maps at gadm.org</Link></StyledNote></p>
-                    <p><StyledDataTitle>Capital</StyledDataTitle> {gnData.capital}</p>
-                    <p><StyledDataTitle>Area</StyledDataTitle> {formatNumber(restData.area)} km<sup>2</sup></p>
-                    <p><StyledDataTitle>Population</StyledDataTitle> {formatNumber(restData.population)} people</p>
-                    <p><StyledDataTitle>Demonym</StyledDataTitle> {restData.demonym}</p>
+                    <p><StyledNote><Link as="a" href={`https://gadm.org/maps/${country.alpha3Code}.html`}>Thematic maps at gadm.org</Link></StyledNote></p>
+                    <p><StyledDataTitle>Capital</StyledDataTitle> {country.capital.join(', ')}</p>
+                    <p><StyledDataTitle>Area</StyledDataTitle> {formatNumber(country.area)} km<sup>2</sup></p>
+                    <p><StyledDataTitle>Population</StyledDataTitle> {formatNumber(country.population)} people</p>
+                    <p><StyledDataTitle>Demonym</StyledDataTitle> {country.demonym}</p>
                     <p><StyledDataTitle>Official Languages</StyledDataTitle></p>
                     <StyledUl>
-                        {restData.languages.map(lang => <li key={`lang-${lang.iso639_1}`}>{lang.name} ({lang.nativeName})</li>)}
+                        {Object.keys(country.languages).map((langKey) => {
+                            const lang = country.languages[langKey];
+                            return (<StyledLi key={`lang-${langKey}`}>{lang}</StyledLi>);
+                        })}
                     </StyledUl>
                     <p><StyledDataTitle>Currencies</StyledDataTitle>
                     </p>
                     <StyledUl>
-                        {restData.currencies.map(curr => (<li key={`cur-${curr.symbol}`}>{curr.name}, symbol: {curr.symbol}</li>))}
+                        {Object.keys(country.currencies).map(
+                            (currKey) => {
+                                const { name, symbol } = country.currencies[currKey];
+                                return (<StyledLi key={`cur-${currKey}`}>{name}, symbol: {symbol}</StyledLi>);
+                            }
+                        )}
                     </StyledUl>
                     <p><StyledDataTitle>Belongs to these regional blocs</StyledDataTitle>
                     </p>
                     <StyledUl>
-                        {restData.regionalBlocs.map(rb => (<li key={`rb-${rb.acronym}`}>{rb.acronym}, {rb.name}</li>))}
+                        {country.regionalBlocs.map(rb => (<StyledLi key={`rb-${rb.acronym}`}>{rb.acronym}, {rb.name}</StyledLi>))}
                     </StyledUl>
-                    <p><StyledDataTitle>Timezones</StyledDataTitle> {restData.timezones.join(', ')}</p>
-                    <p><StyledDataTitle>Calling codes</StyledDataTitle> {restData.callingCodes.join(',')}</p>
-                    <p><StyledDataTitle>TLDs</StyledDataTitle> {restData.topLevelDomain.join(', ')}</p>
+                    <p><StyledDataTitle>Timezones</StyledDataTitle> {country.timezones.join(', ')}</p>
+                    <p><StyledDataTitle>Calling codes</StyledDataTitle> {country.callingCodes.join(',')}</p>
+                    <p><StyledDataTitle>TLDs</StyledDataTitle> {country.topLevelDomain.join(', ')}</p>
                 </section>
                 <section>
-                    <StyledSectionTitle>Media</StyledSectionTitle>
+                    <StyledSectionTitle>This country in other sources</StyledSectionTitle>
+                    <p>Continue your research in these resources:</p>
                     <StyledUl>
-                        <li><Link as="a" href={wikiUrl} target="_blank">This country in Wikipedia</Link></li>
-                        <li>
+                        <StyledLi>
+                            <Link as="a" href={`https://www.cia.gov/library/publications/the-world-factbook/geos/${country.fipsCode.toLowerCase()}.html`} target="_blank">The CIA World Factbook</Link>
+                        </StyledLi>
+                        <StyledLi>
+                            <Link as="a" href={`https://data.worldbank.org/country/${countryNameKebab}`} target="_blank">The World Bank databank</Link>                            
+                        </StyledLi>
+                        <StyledLi>
+                            <Link as="a" href={`https://en.wikipedia.org/wiki/${countryNameSnake}`} target="_blank">wikipedia</Link>                            
+                        </StyledLi>                        
+                        <StyledLi>
+                            <Link as="a" href={`https://ourworldindata.org/country/${countryNameKebab}`} target="_blank">Our World In Data. Hundreds of indicators and graphs</Link>
+                        </StyledLi>
+                        <StyledLi>
+                            <Link as="a" href={`https://countryeconomy.com/countries/${countryNameKebab}`} target="_blank">This country in countryeconomy.com</Link>
+                        </StyledLi>
+                        <StyledLi>
                             <Link as="a" href={`https://www.youtube.com/results?search_query=${countryName}+news`} target="_blank">Youtube: news about this country</Link>
-                        </li>
-                        <li>
-                            <Link as="a" href={`https://www.youtube.com/results?search_query=${nativeName}`} target="_blank">Youtube: videos about this country, in its native language</Link>
-                        </li>
+                        </StyledLi>
+                        <StyledLi>
+                            <Link as="a" href={`https://www.youtube.com/results?search_query=geography+now+${countryName}`} target="_blank">Youtube: Geography Now!</Link>
+                        </StyledLi>                                                
                     </StyledUl>
                 </section>
                 <section>
                     <StyledSectionTitle>Sources:</StyledSectionTitle>
                     <StyledUl>
-                        <li><Link as="a" href="https://www.geonames.org">Geonames</Link></li>
-                        <li><Link as="a" href="https://restcountries.eu">REST Countries</Link></li>
-                        <li>Maps: <Link as="a" href="https://developer.mapquest.com/documentation/open/static-map-api/v5/map/">Mapquest API</Link></li>
-                        <li>National anthem: <Link as="a" href="http://www.nationalanthems.info">nationalanthems.info</Link>;
+                        <StyledLi><Link as="a" href="https://www.geonames.org">Geonames</Link></StyledLi>
+                        <StyledLi><Link as="a" href="https://restcountries.eu">REST Countries</Link></StyledLi>
+                        <StyledLi>Maps: <Link as="a" href="https://developer.mapquest.com/documentation/open/static-map-api/v5/map/">Mapquest API</Link></StyledLi>
+                        <StyledLi>National anthem: <Link as="a" href="http://www.nationalanthems.info">nationalanthems.info</Link>;
                             licensed under a <Link as="a" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License.</Link>
-                        </li>
+                        </StyledLi>
                     </StyledUl>
                 </section>
             </StyledCol>
