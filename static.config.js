@@ -3,10 +3,6 @@ import axios from 'axios'
 
 export default {
     getRoutes: async () => {
-        // const { data: posts } = await axios.get(
-        //     'https://jsonplaceholder.typicode.com/posts'
-        // );
-
         const countriesResponse = await axios.get(
             'https://secure.geonames.org/countryInfoJSON?lang=en&username=fa_lopez&style=full'
         );
@@ -18,12 +14,16 @@ export default {
         const restCountriesData = restCountriesResponse.data || [];
 
         const mlCountriesResponse = await axios.get('https://raw.githubusercontent.com/mledoze/countries/master/dist/countries.json');
-        const mlCountriesData = mlCountriesResponse.data || [];
+        const mlCountriesData = mlCountriesResponse.data || [];        
 
         const thisCountryGnData = code => gnCountries.find(elem => elem.countryCode === code);
-        const countryByIsoAlpha3 = code => gnCountries.find(elem => elem.isoAlpha3 === code);
+        const thisCountryRestData = code => restCountriesData.find(elem => elem.alpha2Code === code);
+        const thisCountryGnDataByIsoAlpha3 = code => gnCountries.find(elem => elem.isoAlpha3 === code);
+
+        const independentMlCountries = mlCountriesData.filter(country => country.independent);
+
         const countryLinkData = (code) => {
-            const thisCountryObj = countryByIsoAlpha3(code) || {};
+            const thisCountryObj = thisCountryGnDataByIsoAlpha3(code) || {};
             if (Object.keys(thisCountryObj).length === 0) {
                 return {};
             }
@@ -41,14 +41,21 @@ export default {
             return bordersArr.map(alpha3Code => countryLinkData(alpha3Code));
         }
 
-        const independentMlCountries = mlCountriesData.filter(country => country.independent);
-        console.log('independentMlCountries: ', independentMlCountries);
-        const independentRestCountries = restCountriesData.filter(country => {
-            const thisCountryCode = country.alpha3Code;
-            const independentIndex = independentMlCountries.findIndex(item => item.cca3 === thisCountryCode);
-            return independentIndex !== -1;
-        });
+        const countriesData = independentMlCountries.map(mlCountry => {
+            const code = mlCountry.cca2;
+            const gnCountry = thisCountryGnData(code);
+            const restCountry = thisCountryRestData(code);
 
+            console.log('restCountry: ', restCountry);
+
+            return {
+                ...restCountry,
+                ...gnCountry,
+                ...mlCountry,
+                flagUrl: restCountry.flag,
+            };
+        });
+        
         return [
             // {
             //     path: '/blog',
@@ -66,17 +73,14 @@ export default {
             {
                 path: '/countries',
                 getData: () => ({
-                    gnCountries,
-                    restCountries: independentMlCountries,
-                    mlCountries: mlCountriesData,
+                    countriesData,
                 }),
-                children: independentRestCountries.map(country => ({
-                    path: `/${country.alpha3Code}`,
+                children: countriesData.map(country => ({
+                    path: `/${country.cca2}`,
                     template: 'src/containers/Country',
                     getData: () => {
                         return {
-                            gnData: thisCountryGnData(country.alpha2Code),
-                            restData: country,
+                            country,
                             bordersLinkData: bordersLinkData(country.borders),
                         };
                     },

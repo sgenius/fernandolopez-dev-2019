@@ -22,13 +22,11 @@ const CountryLinkName = styled.span`
 
 export const CountryLink = ({
     name = '',
-    alpha2Code = '',
-    alpha3Code = '',
-    display = 'block',
+    cca2 = '',
 }) => (
-    <StyledCountryLink to={`/countries/${alpha3Code}`}>
-        {alpha2Code && (
-            <img src={`https://www.countryflags.io/${alpha2Code.toLowerCase()}/shiny/16.png`} alt={`Flag of ${name}`} />
+    <StyledCountryLink to={`/countries/${cca2}`}>
+        {cca2 && (
+            <img src={`https://www.countryflags.io/${cca2.toLowerCase()}/shiny/16.png`} alt={`Flag of ${name}`} />
         )}
         <CountryLinkName>{name}</CountryLinkName>
     </StyledCountryLink>
