@@ -46,8 +46,6 @@ export default {
             const gnCountry = thisCountryGnData(code);
             const restCountry = thisCountryRestData(code);
 
-            console.log('restCountry: ', restCountry);
-
             return {
                 ...restCountry,
                 ...gnCountry,

@@ -18,7 +18,7 @@ const TopBarSection = styled.section`
 export const TopBar = () => (
     <TopBarSection>
         <DefaultOneCol>
-            fernandolopez.dev
+            <a href="/">fernandolopez.dev</a>
         </DefaultOneCol>
     </TopBarSection>
 );
