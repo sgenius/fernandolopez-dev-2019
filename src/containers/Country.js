@@ -90,8 +90,6 @@ const CiaMapFloat = styled.div`
 
 export default function Country() {
     const { country, bordersLinkData } = useRouteData();
-    console.log('route data: ', useRouteData());
-
     const MAPBOX_KEY = 'GauozURsWaWLTHQ5PC5c2qDG8M7RC4ET';
     const { north, west, south, east } = country;
     // Russia has weird dimensions; handle that case
