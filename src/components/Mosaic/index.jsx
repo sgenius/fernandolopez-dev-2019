@@ -1,54 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { fabric } from 'fabric';
+import MosaicControls from './MosaicControls';
 import useFabric from './useFabric';
+import { MOSAIC_DATA } from './constants';
 
 export const Mosaic = () => {
-    const MOSAIC_DATA = {
-        bounds: {
-            xMin: -3,
-            xMax: 12,
-            yMin: -17,
-            yMax: 9,
-        },
-        pieceDimensions: {
-            width: 5,
-            height: 3,
-            multiplier: 10,
-        },
-        pieces: {},
-        imageSets: [
-            {
-                minZoom: 0,
-                path: '/images/mosaic/thumb_',
-            },
-            {
-                minZoom: 3,
-                path: '/images/mosaic/',
-            },
-        ],
-        currentImageSet: 0,
-        canvas: {
-            zoomConfig: {
-                step: 200,
-                min: 0.01,
-                max: 20,
-            },
-        },
-    };
-
+    const [mouseCoords, setMouseCoords] = useState({
+        x: 0,
+        y: 0,
+    });
     const ref = useFabric((fabricCanvas) => {
-        setUpCanvasEvents(fabricCanvas, MOSAIC_DATA);
-        doTheMosaic(fabricCanvas, MOSAIC_DATA)
+        setUpCanvasEvents(fabricCanvas, MOSAIC_DATA, setMouseCoords);
+        doTheMosaic(fabricCanvas, MOSAIC_DATA);
     });
 
     return (
-        <canvas ref={ref} />
+        <div>
+            <canvas
+                ref={ref}
+            />
+            <MosaicControls
+                mouseCoords={mouseCoords}
+            />
+        </div>
     );
 };
 
-const setUpCanvasEvents = (fabricCanvas, mosaicData) => {
+const setUpCanvasEvents = (fabricCanvas, mosaicData, setMouseCoords) => {
     setUpZoom(fabricCanvas, mosaicData);
-    setUpDrag(fabricCanvas, mosaicData);
+    setUpDrag(fabricCanvas, mosaicData, setMouseCoords);
 };
 
 const setUpZoom = (fabricCanvas, mosaicData) => {
@@ -67,7 +47,6 @@ const setUpZoom = (fabricCanvas, mosaicData) => {
             zoom = min;
         }
 
-        console.log('zoom: ', zoom);
         fabricCanvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
 
         updateCurrentImageSetByZoom(fabricCanvas, mosaicData);
@@ -75,23 +54,25 @@ const setUpZoom = (fabricCanvas, mosaicData) => {
         opt.e.preventDefault();
         opt.e.stopPropagation();
     });
-}
+};
 
-const setUpDrag = (fabricCanvas, mosaicData) => {
+const setUpDrag = (fabricCanvas, mosaicData, setMouseCoords) => {
     fabricCanvas.on('mouse:down', function(opt) {
-        const evt = opt.e;
-        if (evt.altKey === true) {
-            this.isDragging = true;
-            this.selection = false;
-            this.lastPosX = evt.clientX;
-            this.lastPosY = evt.clientY;
+        console.log('setUpDrag > opt: ', opt);
+        if (opt.target) {
+            console.log('an object was clicked: ', opt.target.type);
         }
+        const evt = opt.e;
+        this.isDragging = true;
+        this.selection = false;
+        this.lastPosX = evt.clientX;
+        this.lastPosY = evt.clientY;
     });
 
     fabricCanvas.on('mouse:move', function(opt) {
         const evt = opt.e;
         const pointer = fabricCanvas.getPointer(evt, false);
-        console.log('mouse at: ', pointer);
+        setMouseCoords(pointer);
         if(this.isDragging) {
             // viewportTransform has the format of canvas.transform:
             // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
@@ -107,17 +88,17 @@ const setUpDrag = (fabricCanvas, mosaicData) => {
         this.isDragging = false;
         this.selection = true;
     });
-}
+};
 
 const doTheMosaic = (fabricCanvas, mosaicData) => {
     setCanvasSize(fabricCanvas);
     loadFilesIntoCanvas(fabricCanvas, mosaicData);
     fabricCanvas.renderAll();
-}
+};
 
 const setCanvasSize = (fabricCanvas) => {
-    fabricCanvas.setHeight(600);
-    fabricCanvas.setWidth(800);
+    fabricCanvas.setHeight(500);
+    fabricCanvas.setWidth(695);
 };
 
 const loadFilesIntoCanvas = (fabricCanvas, mosaicData) => {
