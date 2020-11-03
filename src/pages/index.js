@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 
 import Background from 'components/Background';
 import RandomTaco from 'components/RandomTaco';

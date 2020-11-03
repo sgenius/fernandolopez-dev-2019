@@ -112,7 +112,6 @@ const makeRegionalCountryLists = (countriesByRegion) => {
 export const Countries = () => {
     const countries = useRouteData().countriesData;
     const countriesByRegion = groupCountriesByRegion(countries);
-    console.log('route data: ', useRouteData());
 
     const countryLists = makeRegionalCountryLists(countriesByRegion);
     return (
