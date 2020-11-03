@@ -24,9 +24,10 @@ export const Mosaic = () => {
             />
         </div>
     );
-};
+ };
 
 const setUpCanvasEvents = (fabricCanvas, mosaicData, setMouseCoords) => {
+    console.log('setUpCanvasEvents');
     setUpZoom(fabricCanvas, mosaicData);
     setUpDrag(fabricCanvas, mosaicData, setMouseCoords);
 };
@@ -58,11 +59,11 @@ const setUpZoom = (fabricCanvas, mosaicData) => {
 
 const setUpDrag = (fabricCanvas, mosaicData, setMouseCoords) => {
     fabricCanvas.on('mouse:down', function(opt) {
-        console.log('setUpDrag > opt: ', opt);
-        if (opt.target) {
-            console.log('an object was clicked: ', opt.target.type);
-        }
+        // if (opt.target) {
+        //     console.log('an object was clicked: ', opt.target.type);
+        // }
         const evt = opt.e;
+        console.log('mouse:down > evt: ', evt);
         this.isDragging = true;
         this.selection = false;
         this.lastPosX = evt.clientX;
@@ -71,22 +72,48 @@ const setUpDrag = (fabricCanvas, mosaicData, setMouseCoords) => {
 
     fabricCanvas.on('mouse:move', function(opt) {
         const evt = opt.e;
-        const pointer = fabricCanvas.getPointer(evt, false);
+        console.log('mouse:move > evt: ', evt);
+        let pointer = {
+            x: undefined,
+            y: undefined,
+        };
+        if (evt.clientX !== undefined) {
+            // this is a mouse event
+            // pointer = fabricCanvas.getPointer(evt, false);
+            pointer = {
+                x: evt.clientX,
+                y: evt.clientY,
+            };
+        } else {
+            // this is a touch event
+            console.log('mouse:move > evt.targetTouches[0]: ', evt.targetTouches[0])
+            pointer = {
+                x: evt.targetTouches[0].clientX,
+                y: evt.targetTouches[0].clientY,
+            };
+        }
+        console.log('mouse:move > pointer: ', pointer);
         setMouseCoords(pointer);
         if(this.isDragging) {
             // viewportTransform has the format of canvas.transform:
             // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
-            this.viewportTransform[4] += evt.clientX - this.lastPosX;
-            this.viewportTransform[5] += evt.clientY - this.lastPosY;
+            this.viewportTransform[4] += pointer.x - this.lastPosX;
+            this.viewportTransform[5] += pointer.y - this.lastPosY;
             this.requestRenderAll();
-            this.lastPosX = evt.clientX;
-            this.lastPosY = evt.clientY;
+            this.lastPosX = pointer.x;
+            this.lastPosY = pointer.y;
         }
+       
     });
 
     fabricCanvas.on('mouse:up', function(opt) {
+        console.log('mouse:up');
         this.isDragging = false;
         this.selection = true;
+    });
+
+    fabricCanvas.on('touch:drag', function(ppt) {
+        console.log('touch:drag');
     });
 };
 

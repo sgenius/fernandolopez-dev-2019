@@ -16,7 +16,6 @@ const GriddedContainer = styled.div`
 `;
 
 const ProjectCell = styled.div`
-    grid-column: 1;
     border: 1px solid #333;
     padding: 1rem;
 `;
@@ -34,10 +33,20 @@ export default () => (
                     <img src="images/the-worlds-countries.png" alt="Cropped screenshot" />
                     <h3><Link as="a" href="/countries">A Guide To The World's Countries</Link></h3>
                     <p>A simplistic World Almanac statically compiled using React Static and public APIs.</p>
-                    <p><EsSpan>Un Almanaque Mundial simplista, construido est&aacute;ticamente usando React Static y APIs p&uacute;blicas. En ingl&eacute;s solamente.</EsSpan></p>
+                    <p>
+                        <EsSpan>Un Almanaque Mundial simplista, construido est&aacute;ticamente usando React Static y APIs p&uacute;blicas. En ingl&eacute;s solamente.</EsSpan>
+                    </p>
+                </ProjectCell>
+                <ProjectCell>
+                    <img src="images/mosaic-screenshot.png" alt="Cropped screenshot" />
+                    <h3><Link as="a" href="/mosaic">Map Mosaic</Link></h3>
+                    <p>A barebones renderer for scanned pieces of an off-line imaginary map. Use the mouse to interact with the map. Uses <Link as="a" href="http://fabricjs.com/">Fabric</Link>, a React library for canvas manipulation.</p>
+                    <p>
+                        <EsSpan>Un desplegador muy básico para mostrar piezas escaneadas de un mapa imaginario. Usa el mouse para interactuar con el mapa. Hecho con <Link as="a" href="http://fabricjs.com/">Fabric</Link>, una biblioteca de React para manipulación de canvas.</EsSpan>
+                    </p>
                 </ProjectCell>
             </GriddedContainer>
-            <Background bg="#f9f9f9"/>
+            <Background bg="#f9f9f9" />
         </DefaultOneCol>
     </>
 );
