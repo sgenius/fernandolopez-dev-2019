@@ -94,6 +94,23 @@ export const MosaicPage = () => (
                 </Row>
             </StyledContainer>
         </DefaultOneCol>
+        <DefaultOneCol>
+            <StyledContainer>
+                <h2>Map license / Licencia para el mapa</h2>
+                <p>
+                    <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style={{borderWidth:0}} src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+                </p>
+                <p>
+                    The above applies to the image tiles themselves, as well as the map depicted in them.
+                </p>
+                <p>
+                    <em><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia Creative Commons" style={{borderWidth:0}} src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a><br />Esta obra está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Licencia Creative Commons Atribución-CompartirIgual 4.0 Internacional</a>.</em>
+                </p>
+                <p>
+                    <em>Lo anterior aplica a las imágenes del mapa como tales, así como al mapa mostrado en ellas.</em>
+                </p>
+            </StyledContainer>
+        </DefaultOneCol>
     </main>
 );
 
