@@ -10,6 +10,10 @@ const StyledContainer = styled(Container)`
     margin: 0 auto; 
 `;
 
+const EsCol = styled(Col)`
+    font-style: italic;
+`;
+
 export const MosaicPage = () => (
     <main>
         <DefaultOneCol>
@@ -19,7 +23,7 @@ export const MosaicPage = () => (
         <DefaultOneCol>
             <StyledContainer>
                 <Row>
-                    <Col xs={4} lg={4}>
+                    <Col xs={4} md={4}>
                         <p>
                             This project has four main parts:
                         </p>
@@ -53,7 +57,7 @@ export const MosaicPage = () => (
                             </li>
                         </ul>
                     </Col>
-                    <Col xs={4} lg={4}>
+                    <EsCol xs={4} md={4}>
                         <p>
                             Este proyecto tiene cuatro partes principales:
                         </p>
@@ -86,7 +90,7 @@ export const MosaicPage = () => (
                                 Fabric usa poderosas abstracciones para manejar "objetos" dentro del canvas e incluye un gran n&uacute;mero de utiler&iacute;as. La biblioteca como tal no trabaja muy bien con React, por lo que hice un <em>wrapper</em> basado en <Link as="a" href="https://stackoverflow.com/questions/37565041/how-can-i-use-fabric-js-with-react">esta respuesta de ReactOverflow.</Link>
                             </li>
                         </ul>                    
-                    </Col>
+                    </EsCol>
                 </Row>
             </StyledContainer>
         </DefaultOneCol>
