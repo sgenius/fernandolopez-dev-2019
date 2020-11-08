@@ -9,8 +9,14 @@ export const Mosaic = () => {
         x: 0,
         y: 0,
     });
+    const [mapCoords, setMapCoords] = useState({
+        x: 0,
+        y: 0,
+    });
+    const [zoom, setZoom] = useState(0);
+
     const ref = useFabric((fabricCanvas) => {
-        setUpCanvasEvents(fabricCanvas, MOSAIC_DATA, setMouseCoords);
+        setUpCanvasEvents(fabricCanvas, MOSAIC_DATA, setMouseCoords, setZoom);
         doTheMosaic(fabricCanvas, MOSAIC_DATA);
     });
 
@@ -21,17 +27,18 @@ export const Mosaic = () => {
             />
             <MosaicControls
                 mouseCoords={mouseCoords}
+                zoom={zoom}
             />
         </div>
     );
  };
 
-const setUpCanvasEvents = (fabricCanvas, mosaicData, setMouseCoords) => {
-    setUpZoom(fabricCanvas, mosaicData);
+const setUpCanvasEvents = (fabricCanvas, mosaicData, setMouseCoords, setZoom) => {
+    setUpZoom(fabricCanvas, mosaicData, setZoom);
     setUpDrag(fabricCanvas, mosaicData, setMouseCoords);
 };
 
-const setUpZoom = (fabricCanvas, mosaicData) => {
+const setUpZoom = (fabricCanvas, mosaicData, setZoom) => {
     fabricCanvas.on('mouse:wheel', function(opt) {
         const { canvas } = mosaicData;
         const { zoomConfig } = canvas;
@@ -50,6 +57,7 @@ const setUpZoom = (fabricCanvas, mosaicData) => {
         fabricCanvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
 
         updateCurrentImageSetByZoom(fabricCanvas, mosaicData);
+        setZoom(zoom);
 
         opt.e.preventDefault();
         opt.e.stopPropagation();
@@ -188,7 +196,29 @@ const updateCurrentImageSetByZoom = (fabricCanvas, mosaicData) => {
     }
 }
 
+const unloadAllPieces = (fabricCanvas, mosaicData) => {
+    const { bounds } = mosaicData;
+    const { xMin, xMax, yMin, yMax } = bounds;
+
+    for (let xGrid = xMin; xGrid <= xMax; xGrid += 1) {
+        for (let yGrid = yMax; yGrid >= yMin; yGrid -= 1) {
+            unloadPiece(xGrid, yGrid, fabricCanvas, mosaicData);
+        }
+    }
+
+    mosaicData.pieces = {};
+}
+
+const unloadPiece = (xGrid, yGrid, fabricCanvas, mosaicData) => {
+    const { pieces } = mosaicData;
+    const gridCoords = `${xGrid},${yGrid}`;
+
+    const img = pieces[gridCoords];
+    fabricCanvas.remove(img);
+}
+
 const reloadPieces = (fabricCanvas, mosaicData) => {
+    unloadAllPieces(fabricCanvas, mosaicData);
     loadFilesIntoCanvas(fabricCanvas, mosaicData);
     fabricCanvas.renderAll();
 }
