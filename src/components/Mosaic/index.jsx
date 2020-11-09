@@ -112,7 +112,6 @@ const getMiddlePoint = (point1, point2) => ({
     y: (point1.y + point2.y) / 2,
 });
 
-
 const getClientCoordsFromEvent = (evt) => {
     if (evt.clientX !== undefined) {
         return {
