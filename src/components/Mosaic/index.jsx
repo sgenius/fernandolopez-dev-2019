@@ -32,24 +32,13 @@ export const Mosaic = () => {
 const setUpCanvasEvents = (fabricCanvas, mosaicData, setMouseCoords, setZoom) => {
     fabricCanvas.on('mouse:wheel', function(opt) {
         const evt = opt.e;
-        const { canvas } = mosaicData;
-        const { zoomConfig } = canvas;
-        const { step, max, min } = zoomConfig;
-
         const delta = evt.deltaY;
-        let zoom = fabricCanvas.getZoom();
-        zoom = zoom + delta/step;
-        if (zoom > max) {
-            zoom = max;
-        }
-        if (zoom < min) {
-            zoom = min;
-        }
+        const pointToZoom = {
+            x: evt.offsetX,
+            y: evt.offsetY,
+        };
 
-        fabricCanvas.zoomToPoint({x: evt.offsetX, y: evt.offsetY}, zoom);
-
-        updateCurrentImageSetByZoom(fabricCanvas, mosaicData);
-        setZoom(zoom);
+        doZoom(fabricCanvas, mosaicData, delta, pointToZoom, setZoom);
 
         evt.preventDefault();
         evt.stopPropagation();
@@ -75,25 +64,11 @@ const setUpCanvasEvents = (fabricCanvas, mosaicData, setMouseCoords, setZoom) =>
         const pointer = getClientCoordsFromEvent(evt);
         setMouseCoords(pointer);
 
-        console.log('fabricCanvas.on(mouse:move) > evt.touches: ', evt.touches);
-        console.log('fabricCanvas.on(mouse:move) > this.touches: ', this.touches);
-
         if (this.touches && this.touches.length > 1 && evt.touches && evt.touches.length > 1) {
-            console.log('fabricCanvas.on(mouse:move) > about to zoom?')
-            // for (var i = 0; i < evt.touches.length; i++) {
-            //     const touch = evt.touches.item(i);
-            //     console.log('fabricCanvas.on(mouse:move) > touch #', i, ': ', touch);
-            // }
-            // do zoom using the two first registered touches
-
             // first, get the delta: 
             // - get the distance between the original points
             // - get the distance between the dragged points
             // - the difference is the delta
-            const { canvas } = mosaicData;
-            const { zoomConfig } = canvas;    
-            const { step, max, min } = zoomConfig;
-
             const oldPoint0 = getClientCoordsFromEvent(this.touches.item(0));
             const oldPoint1 = getClientCoordsFromEvent(this.touches.item(1));
 
@@ -102,61 +77,41 @@ const setUpCanvasEvents = (fabricCanvas, mosaicData, setMouseCoords, setZoom) =>
 
             const originalDistance = getDistanceBetweenPoints(oldPoint0, oldPoint1);
             const newDistance = getDistanceBetweenPoints(newPoint0, newPoint1);
-            console.log('fabricCanvas.on(mouse:move) > originalDistance: ', originalDistance);
-            console.log('fabricCanvas.on(mouse:move) > newDistance: ', newDistance);
-
             const delta = newDistance - originalDistance;
-            let zoom = fabricCanvas.getZoom();
-            zoom = zoom + delta / step;
-            if (zoom > max) {
-                zoom = max;
-            }
-            if (zoom < min) {
-                zoom = min;
-            }
 
-            // the center point of the zoom is the middle point between the two *last* touches
+            // the point to zoom is the middle point between the two *latest* touch points
             const pointToZoom = getMiddlePoint(newPoint0, newPoint1);
 
-            fabricCanvas.zoomToPoint(pointToZoom, zoom);
-
-            updateCurrentImageSetByZoom(fabricCanvas, mosaicData);
-            setZoom(zoom);
+            doZoom(fabricCanvas, mosaicData, delta, pointToZoom, setZoom);
     
-            evt.preventDefault();
-            evt.stopPropagation();
-
-            // finally, update the touches saved in the fabricCanvas object
-            this.touches = evt.touches;
         } else if(this.isDragging) {
             doDrag(this, pointer);
         }
 
+        // update the touches saved in the fabricCanvas object
         if (evt.touches) {
             this.touches = evt.touches;
         }
-       
+
+        evt.preventDefault();
+        evt.stopPropagation();
     });
 
     fabricCanvas.on('mouse:up', function(opt) {
-        console.log('fabricCanvas.on(mouse:up)');
         this.touches = undefined;
         this.isDragging = false;
         this.selection = true;
     });
 };
 
-const getDistanceBetweenPoints = (point1, point2) => {
-    console.log('getDistanceBetweenPoints > point1: ', point1);
-    return Math.sqrt(Math.pow((point2.y - point1.y), 2) + Math.pow((point2.x - point1.x), 2));
-}
+const getDistanceBetweenPoints = (point1, point2) =>
+    Math.sqrt(Math.pow((point2.y - point1.y), 2) + Math.pow((point2.x - point1.x), 2));
 
-const getMiddlePoint = (point1, point2) => {
-    return {
-        x: (point1.x + point2.x) / 2,
-        y: (point1.y + point2.y) / 2,
-    };
-}
+const getMiddlePoint = (point1, point2) => ({
+    x: (point1.x + point2.x) / 2,
+    y: (point1.y + point2.y) / 2,
+});
+
 
 const getClientCoordsFromEvent = (evt) => {
     if (evt.clientX !== undefined) {
@@ -186,7 +141,25 @@ const doDrag = (fabricCanvas, clientCoords) => {
     fabricCanvas.lastPosY = clientCoords.y;
 }
 
+const doZoom = (fabricCanvas, mosaicData, delta, pointToZoom, setZoom) => {
+    const { canvas } = mosaicData;
+    const { zoomConfig } = canvas;    
+    const { step, max, min } = zoomConfig;
 
+    let zoom = fabricCanvas.getZoom();
+    zoom = zoom + delta / step;
+    if (zoom > max) {
+        zoom = max;
+    }
+    if (zoom < min) {
+        zoom = min;
+    }
+
+    fabricCanvas.zoomToPoint(pointToZoom, zoom);
+
+    updateCurrentImageSetByZoom(fabricCanvas, mosaicData);
+    setZoom(zoom);
+}
 
 const doTheMosaic = (fabricCanvas, mosaicData) => {
     setCanvasSize(fabricCanvas);
