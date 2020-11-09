@@ -24,6 +24,7 @@ const Text = styled.span`
 
 export const MosaicControls = ({
     mouseCoords,
+    zoom,
 }) => {
     return (
         <Wrapper>
@@ -31,6 +32,11 @@ export const MosaicControls = ({
                 <Section>
                     <Text>
                         Mouse at: {mouseCoords.x}, {mouseCoords.y}
+                    </Text>
+                </Section>
+                <Section>
+                    <Text>
+                        Zoom: {zoom}
                     </Text>
                 </Section>
             </Row>
