@@ -69,8 +69,13 @@ const setUpDrag = (fabricCanvas, mosaicData, setMouseCoords) => {
         const evt = opt.e;
         this.isDragging = true;
         this.selection = false;
-        this.lastPosX = evt.clientX;
-        this.lastPosY = evt.clientY;
+        if (evt.clientX !== undefined) {
+            this.lastPosX = evt.clientX;
+            this.lastPosY = evt.clientY;
+        } else {
+            this.lastPosX = evt.targetTouches[0].clientX;
+            this.lastPosY = evt.targetTouches[0].clientY;
+        }
     });
 
     fabricCanvas.on('mouse:move', function(opt) {
@@ -94,13 +99,20 @@ const setUpDrag = (fabricCanvas, mosaicData, setMouseCoords) => {
         }
         setMouseCoords(pointer);
         if(this.isDragging) {
+            console.log('setUpDrag > this.viewportTransform (before): ', this.viewportTransform);
+            console.log('setUpDrag > pointer.x: ', pointer.x);
+            console.log('setUpDrag > this.lastPosX: ', this.lastPosX);
+
             // viewportTransform has the format of canvas.transform:
             // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
             this.viewportTransform[4] += pointer.x - this.lastPosX;
             this.viewportTransform[5] += pointer.y - this.lastPosY;
             this.requestRenderAll();
+            console.log('setUpDrag > this.viewportTransform (after): ', this.viewportTransform);
+
             this.lastPosX = pointer.x;
             this.lastPosY = pointer.y;
+
         }
        
     });
@@ -206,7 +218,7 @@ const unloadAllPieces = (fabricCanvas, mosaicData) => {
         }
     }
 
-    mosaicData.pieces = {};
+    // mosaicData.pieces = {};
 }
 
 const unloadPiece = (xGrid, yGrid, fabricCanvas, mosaicData) => {
