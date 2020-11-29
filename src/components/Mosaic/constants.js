@@ -73,9 +73,9 @@ export const AVAILABLE_FILTERS = {
     }),
     inverseHighlightPoliticalDivisionAndFreeways: new fabric.Image.filters.ColorMatrix({
         matrix: [
-              -0.9, 1.5, -0.6, 0, 0.7,
-              -0.9, 1.5, -0.6, 0, 0.7,
-              -0.9, 1.5, -0.6, 0, 0.7,
+              -0.8, 1.5, -0.7, 0, 0.7,
+              -0.85, 1.5, -0.7, 0, 0.7,
+              -0.8, 1.5, -0.7, 0, 0.7,
               0, 0, 0, 1, 0,
         ],
     }),
@@ -85,23 +85,19 @@ export const AVAILABLE_FILTERS = {
     }),
     removeSecondaryRoads1: new fabric.Image.filters.RemoveColor({
         color: '#d94c52',
-        distance: 0.2,
+        distance: 0.3,
     }),
     removeSecondaryRoads2: new fabric.Image.filters.RemoveColor({
         color: '#db6246',
-        distance: 0.2,
-    }),
-    removeSecondaryRoads3: new fabric.Image.filters.RemoveColor({
-        color: '#ea9ba6',
-        distance: 0.2,
+        distance: 0.3,
     }),
     removePrimaryRoads: new fabric.Image.filters.RemoveColor({
         color: '#da5462',
-        distance: 0.2,
+        distance: 0.3,
     }),
     removeCoasts: new fabric.Image.filters.RemoveColor({
         color: '#696eb3',
-        distance: 0.4,
+        distance: 0.3,
     }),
     removeContourLines: new fabric.Image.filters.RemoveColor({
         color: '#fde09e',
