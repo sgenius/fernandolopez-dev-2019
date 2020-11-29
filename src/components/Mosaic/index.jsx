@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { fabric } from 'fabric';
 import MosaicControls from './MosaicControls';
 import useFabric from './useFabric';
-import { MOSAIC_DATA } from './constants';
+import { MOSAIC_DATA, AVAILABLE_FILTERS } from './constants';
 
 export const Mosaic = () => {
     const [mouseCoords, setMouseCoords] = useState({
@@ -12,6 +12,7 @@ export const Mosaic = () => {
     const [zoom, setZoom] = useState(0);
 
     const ref = useFabric((fabricCanvas) => {
+        initFilterData(MOSAIC_DATA);
         setUpCanvasEvents(fabricCanvas, MOSAIC_DATA, setMouseCoords, setZoom);
         doTheMosaic(fabricCanvas, MOSAIC_DATA);
     });
@@ -28,6 +29,19 @@ export const Mosaic = () => {
         </div>
     );
  };
+
+const initFilterData = (mosaicData) => {
+    // eventually this would be configurable
+    mosaicData.activeFilters = [
+        AVAILABLE_FILTERS.removeSecondaryRoads2,
+        AVAILABLE_FILTERS.removeSecondaryRoads1,
+        AVAILABLE_FILTERS.removePrimaryRoads,
+        AVAILABLE_FILTERS.removeCoasts,
+        // AVAILABLE_FILTERS.removeContourLines,
+        AVAILABLE_FILTERS.removeContourLineNumbers,
+        AVAILABLE_FILTERS.inverseHighlightPoliticalDivisionAndFreeways,
+    ];
+}
 
 const setUpCanvasEvents = (fabricCanvas, mosaicData, setMouseCoords, setZoom) => {
     fabricCanvas.on('mouse:wheel', function(opt) {
@@ -163,7 +177,7 @@ const doZoom = (fabricCanvas, mosaicData, delta, pointToZoom, setZoom) => {
 const doTheMosaic = (fabricCanvas, mosaicData) => {
     setCanvasSize(fabricCanvas);
     loadFilesIntoCanvas(fabricCanvas, mosaicData);
-    fabricCanvas.renderAll();
+    renderCanvas(fabricCanvas, mosaicData);
 };
 
 const setCanvasSize = (fabricCanvas) => {
@@ -191,8 +205,8 @@ const loadPiece = (xGrid, yGrid, fabricCanvas, mosaicData) => {
     fabric.Image.fromURL(file, (loadedImg) => {
         pieces[gridCoords] = loadedImg; // eg. pieces['2,3']
         loadedImg.selectable = false;
-        fabricCanvas.add(loadedImg);
         placePiece(xGrid, yGrid, fabricCanvas, mosaicData);
+        applyFiltersToImg(loadedImg, mosaicData);
     });
 }
 
@@ -219,11 +233,26 @@ const placePiece = (xGrid, yGrid, fabricCanvas, mosaicData) => {
     const yInCanvas = yRef * pixelHeight;
     loadedImg.set('top', yInCanvas);
 
+    loadedImg.set('naturalWidth', width);
+    loadedImg.set('naturalHeight', height);
+
     // https://github.com/fabricjs/fabric.js/wiki/When-to-call-setCoords
     loadedImg.setCoords();
 
     fabricCanvas.add(loadedImg);
 };
+
+const applyFiltersToImg = (loadedImg, mosaicData) => {
+    const { activeFilters } = mosaicData;
+    console.log('applyFiltersToImg > activeFilters: ', )
+
+    // for some reason, spreading the array won't work
+    activeFilters.forEach(filter => {
+        console.log('filter: ', filter);
+        loadedImg.filters.push(filter);
+    });
+    loadedImg.applyFilters();
+}
 
 const updateCurrentImageSetByZoom = (fabricCanvas, mosaicData) => {
     const { imageSets, currentImageSet } = mosaicData;
@@ -267,6 +296,10 @@ const unloadPiece = (xGrid, yGrid, fabricCanvas, mosaicData) => {
 const reloadPieces = (fabricCanvas, mosaicData) => {
     unloadAllPieces(fabricCanvas, mosaicData);
     loadFilesIntoCanvas(fabricCanvas, mosaicData);
+    renderCanvas(fabricCanvas, mosaicData);
+}
+
+const renderCanvas = (fabricCanvas) => {
     fabricCanvas.renderAll();
 }
 
