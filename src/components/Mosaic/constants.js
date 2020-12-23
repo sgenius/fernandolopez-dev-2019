@@ -32,6 +32,7 @@ export const MOSAIC_DATA = {
         },
     },
     activeFilters: [],
+    currentRef: null,
 };
 
 export const AVAILABLE_FILTERS = {
@@ -108,3 +109,21 @@ export const AVAILABLE_FILTERS = {
         distance: 0.1,
     }),
 };
+
+export const AVAILABLE_FILTER_CONFIGURATIONS = [
+    {
+        name: 'None',
+        filters: [],
+    },
+    {
+        name: 'Highlight political division',
+        filters: [
+            AVAILABLE_FILTERS.removeSecondaryRoads2,
+            AVAILABLE_FILTERS.removeSecondaryRoads1,
+            AVAILABLE_FILTERS.removePrimaryRoads,
+            AVAILABLE_FILTERS.removeCoasts,
+            AVAILABLE_FILTERS.removeContourLineNumbers,
+            AVAILABLE_FILTERS.inverseHighlightPoliticalDivisionAndFreeways,
+        ],
+    },
+];

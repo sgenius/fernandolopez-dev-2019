@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { AVAILABLE_FILTER_CONFIGURATIONS } from '../constants';
 
 const Wrapper = styled.div`
     background: #111;
@@ -25,7 +26,16 @@ const Text = styled.span`
 export const MosaicControls = ({
     mouseCoords,
     zoom,
+    selectedFilters,
+    handleSelectedFiltersChange,
 }) => {
+
+    const renderFilterOptions = AVAILABLE_FILTER_CONFIGURATIONS.map((optionConfig, optionConfigIndex) => {
+        return (
+            <option value={optionConfigIndex} selected={optionConfigIndex === selectedFilters}>{optionConfig.name}</option>
+        )
+    })
+
     return (
         <Wrapper>
             <Row>
@@ -38,6 +48,14 @@ export const MosaicControls = ({
                     <Text>
                         Zoom: {zoom}
                     </Text>
+                </Section>
+                <Section>
+                    <Text>
+                        Filters:
+                    </Text>
+                    <select onChange={handleSelectedFiltersChange}>
+                        {renderFilterOptions}
+                    </select>
                 </Section>
             </Row>
         </Wrapper>
