@@ -10,14 +10,14 @@ const GriddedContainer = styled.div`
     padding-bottom: 1rem;
     @media (min-width: 48rem) {
         grid-template-columns: 1fr 1fr;
-        grid-column-gap: 3rem;
-        padding-bottom: 2rem;
+        grid-column-gap: 2rem;
     }
 `;
 
 const ProjectCell = styled.div`
     border: 1px solid #333;
     padding: 1rem;
+    margin-bottom: 2rem;
 `;
 
 const EsSpan = styled.span`
@@ -43,6 +43,14 @@ export default () => (
                     <p>A barebones renderer for scanned pieces of an off-line imaginary map. Use the mouse to interact with the map. Uses <Link as="a" href="http://fabricjs.com/">Fabric</Link>, a React library for canvas manipulation.</p>
                     <p>
                         <EsSpan>Un desplegador muy básico para mostrar piezas escaneadas de un mapa imaginario. Usa el mouse para interactuar con el mapa. Hecho con <Link as="a" href="http://fabricjs.com/">Fabric</Link>, una biblioteca de React para manipulación de canvas.</EsSpan>
+                    </p>
+                </ProjectCell>
+                <ProjectCell>
+                    <img src="images/unicode-mosaic.png" alt="Cropped screenshot" />
+                    <h3><Link as="a" href="https://bi3vr.csb.app/" target="_blank">Unicode Tapestry</Link></h3>
+                    <p>An animated "toy" made with React, Typescript, and a few strategically chosen text outputs.</p>
+                    <p>
+                        <EsSpan>Un "juguete" animado hecho con React, Typescript y algunos textos bien escogidos.</EsSpan>
                     </p>
                 </ProjectCell>
             </GriddedContainer>

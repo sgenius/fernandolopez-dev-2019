@@ -6,7 +6,7 @@ import { GiTacos } from 'react-icons/gi';
 import Link from 'components/Link';
 
 const StyledTacoSection = styled.section`
-    padding-bottom: 1rem;
+    padding: 1rem 0;
 `;
 
 const StyledTacoWrapper = styled.span`
